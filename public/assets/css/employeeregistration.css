@@ -1,0 +1,101 @@
+ body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+}
+.form-section {
+    margin-bottom: 25px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+.form-section h2 {
+    margin-top: 0;
+    color: #3498db;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="password"],
+input[type="date"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+.radio-group, .checkbox-group {
+    margin-bottom: 15px;
+}
+.radio-group label, .checkbox-group label {
+    display: inline-block;
+    margin-right: 15px;
+    font-weight: normal;
+}
+button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    display: block;
+    margin: 20px auto 0;
+}
+button:hover {
+    background-color: #2980b9;
+}
+.required:after {
+    content: " *";
+    color: red;
+}
+.skills-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+.skill-tag {
+    background-color: #e0e0e0;
+    padding: 5px 10px;
+    border-radius: 15px;
+    display: inline-flex;
+    align-items: center;
+}
+.skill-tag button {
+    background: none;
+    border: none;
+    color: #666;
+    margin-left: 5px;
+    padding: 0;
+    font-size: 14px;
+}
+.hidden {
+    display: none;
+}
