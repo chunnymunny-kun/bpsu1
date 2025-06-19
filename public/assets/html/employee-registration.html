@@ -122,110 +122,196 @@
         </form>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Set max date for date of birth (minimum age 18)
-            const dobInput = document.getElementById('dob');
-            const today = new Date();
-            const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
-            dobInput.max = maxDate.toISOString().split('T')[0];
-            
-            // Skills management
-            const skillInput = document.getElementById('skillInput');
-            const skillsContainer = document.getElementById('skillsContainer');
-            const skillsHiddenInput = document.getElementById('skills');
-            let skillsList = [];
-            
-            skillInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    addSkill();
-                }
-            });
-            
-            function addSkill() {
-                const skill = skillInput.value.trim();
-                if (skill && !skillsList.includes(skill)) {
-                    skillsList.push(skill);
-                    updateSkillsDisplay();
-                    skillInput.value = '';
-                }
-            }
-            
-            function removeSkill(index) {
-                skillsList.splice(index, 1);
-                updateSkillsDisplay();
-            }
-            
-            function updateSkillsDisplay() {
-                skillsContainer.innerHTML = '';
-                skillsList.forEach((skill, index) => {
-                    const skillTag = document.createElement('div');
-                    skillTag.className = 'skill-tag';
-                    skillTag.innerHTML = `
-                        ${skill}
-                        <button type="button" onclick="removeSkill(${index})">×</button>
-                    `;
-                    skillsContainer.appendChild(skillTag);
-                });
-                skillsHiddenInput.value = skillsList.join(',');
-            }
-            
-            // Make functions available globally
-            window.addSkill = addSkill;
-            window.removeSkill = removeSkill;
-            
-            // Form submission
-            const form = document.getElementById('employeeRegistrationForm');
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Validate passwords match
-                const password = document.getElementById('password').value;
-                const confirmPassword = document.getElementById('confirmPassword').value;
-                
-                if (password !== confirmPassword) {
-                    alert('Passwords do not match!');
-                    return;
-                }
-                
-                // Validate at least one skill is added
-                if (skillsList.length === 0) {
-                    alert('Please add at least one skill');
-                    return;
-                }
-                
-                // Form is valid, proceed with submission
-                alert('Registration successful!');
-                // Here you would typically send the data to your server
-                console.log('Form data:', {
-                    personalInfo: {
-                        fullName: document.getElementById('fullName').value,
-                        email: document.getElementById('email').value,
-                        phone: document.getElementById('phone').value,
-                        address: document.getElementById('address').value,
-                        dob: document.getElementById('dob').value,
-                        gender: document.querySelector('input[name="gender"]:checked')?.value
-                    },
-                    accountInfo: {
-                        email: document.getElementById('accountEmail').value,
-                        password: document.getElementById('password').value
-                    },
-                    jobMatchingInfo: {
-                        jobTitle: document.getElementById('jobTitle').value,
-                        jobType: document.getElementById('jobType').value,
-                        workArrangement: document.getElementById('workArrangement').value,
-                        salaryExpectation: document.getElementById('salaryExpectation').value,
-                        experienceLevel: document.getElementById('experienceLevel').value,
-                        educationLevel: document.getElementById('educationLevel').value,
-                        skills: skillsList,
-                        certifications: document.getElementById('certifications').value,
-                        languages: document.getElementById('languages').value,
-                        willingToRelocate: document.querySelector('input[name="willingToRelocate"]:checked')?.value
-                    }
-                });
-            });
+    
+
+<script type="module">
+    // Import Firebase services
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import { 
+        getAuth, 
+        createUserWithEmailAndPassword,
+        sendEmailVerification,
+        updateProfile
+    } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+    import { 
+        getFirestore,
+        collection,
+        doc,
+        setDoc
+    } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-analytics.js";
+
+    // Firebase configuration for CareerStep
+    const firebaseConfig = {
+        apiKey: "AIzaSyCM1QSKbZH9Ih3RHv39nQipYoti8Yrji_M",
+        authDomain: "careerstep-bpsu1.firebaseapp.com",
+        projectId: "careerstep-bpsu1",
+        storageBucket: "careerstep-bpsu1.firebasestorage.app",
+        messagingSenderId: "17047315291",
+        appId: "1:17047315291:web:dc2c9312e3d5b0ced5307e",
+        measurementId: "G-WH6DT9HQW2"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig, "CareerStepApp");
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const analytics = getAnalytics(app);
+
+    // Configure email sender as CareerStep
+    auth.useDeviceLanguage();
+    auth.settings.appVerificationDisabledForTesting = false; // Set to true only for testing
+
+    // Handle form submission
+    document.getElementById('employeeRegistrationForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // Show loading state
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Creating account...';
+        
+        try {
+        // Get form values
+        const fullName = document.getElementById('fullName').value;
+        const accountEmail = document.getElementById('accountEmail').value;
+        const password = document.getElementById('password').value;
+        
+        // Create user account
+        const userCredential = await createUserWithEmailAndPassword(auth, accountEmail, password);
+        const user = userCredential.user;
+        
+        // Update user profile with display name
+        await updateProfile(user, { displayName: fullName });
+        
+        // Send email verification FROM CAREERSTEP
+        await sendEmailVerification(user, {
+            url: 'https://careerstep-bpsu1.firebaseapp.com/verify-redirect',
+            handleCodeInApp: true
         });
-    </script>
+        
+        // Prepare user data for Firestore
+        const userData = {
+            metadata: {
+            createdAt: new Date(),
+            lastUpdated: new Date(),
+            accountType: 'employee'
+            },
+            personalInfo: {
+            fullName,
+            contactEmail: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            address: document.getElementById('address').value,
+            dob: document.getElementById('dob').value,
+            gender: document.querySelector('input[name="gender"]:checked')?.value || 'Not specified'
+            },
+            jobPreferences: {
+            jobTitle: document.getElementById('jobTitle').value,
+            jobType: document.getElementById('jobType').value,
+            workArrangement: document.getElementById('workArrangement').value,
+            salaryExpectation: document.getElementById('salaryExpectation').value,
+            experienceLevel: document.getElementById('experienceLevel').value,
+            educationLevel: document.getElementById('educationLevel').value,
+            skills: document.getElementById('skills').value.split(','),
+            certifications: document.getElementById('certifications').value || 'None',
+            languages: document.getElementById('languages').value || 'Not specified',
+            willingToRelocate: document.querySelector('input[name="willingToRelocate"]:checked')?.value || 'No'
+            },
+            accountStatus: {
+            emailVerified: false,
+            profileComplete: true,
+            jobAlertsEnabled: true
+            }
+        };
+        
+        // Save to Firestore under CareerStep collection
+        await setDoc(doc(db, 'careerstepEmployees', user.uid), userData);
+        
+        // Create public profile for matching
+        const publicProfile = {
+            userId: user.uid,
+            displayName: fullName,
+            ...userData.jobPreferences,
+            lastUpdated: new Date()
+        };
+        await setDoc(doc(db, 'careerstepPublicProfiles', user.uid), publicProfile);
+        
+        // Success - redirect to verification page
+        window.location.href = `verify-email.html?email=${encodeURIComponent(accountEmail)}`;
+        
+        } catch (error) {
+        console.error('CareerStep Registration Error:', error);
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Complete Registration';
+        
+        // Enhanced error handling
+        const errorMap = {
+            'auth/email-already-in-use': 'This email is already registered with CareerStep',
+            'auth/invalid-email': 'Please enter a valid CareerStep email address',
+            'auth/weak-password': 'Password must be at least 6 characters',
+            'auth/operation-not-allowed': 'Account creation is currently restricted',
+            'auth/network-request-failed': 'Network error. Please check your connection'
+        };
+        
+        alert(errorMap[error.code] || 'CareerStep registration failed. Please try again.');
+        }
+    });
+
+    // Skills management functions
+    let skillsList = [];
+    
+    function addSkill() {
+        const skillInput = document.getElementById('skillInput');
+        const skill = skillInput.value.trim();
+        if (skill && !skillsList.includes(skill)) {
+        skillsList.push(skill);
+        updateSkillsDisplay();
+        skillInput.value = '';
+        }
+    }
+    
+    function removeSkill(index) {
+        skillsList.splice(index, 1);
+        updateSkillsDisplay();
+    }
+    
+    function updateSkillsDisplay() {
+        const skillsContainer = document.getElementById('skillsContainer');
+        const skillsHiddenInput = document.getElementById('skills');
+        
+        skillsContainer.innerHTML = '';
+        skillsList.forEach((skill, index) => {
+        const skillTag = document.createElement('div');
+        skillTag.className = 'skill-tag';
+        skillTag.innerHTML = `
+            ${skill}
+            <button type="button" onclick="removeSkill(${index})">×</button>
+        `;
+        skillsContainer.appendChild(skillTag);
+        });
+        skillsHiddenInput.value = skillsList.join(',');
+    }
+    
+    // Initialize form
+    document.addEventListener('DOMContentLoaded', () => {
+        // Set max date for DOB (18+)
+        const dobInput = document.getElementById('dob');
+        const today = new Date();
+        dobInput.max = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate())
+        .toISOString().split('T')[0];
+        
+        // Skill input handler
+        document.getElementById('skillInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            addSkill();
+        }
+        });
+        
+        // Make functions global
+        window.addSkill = addSkill;
+        window.removeSkill = removeSkill;
+    });
+</script>
 </body>
 </html>
