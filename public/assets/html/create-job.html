@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Job Listing</title>
+    <link rel="icon" type="image/png" href="../images/icon.png">
+    <link rel="stylesheet" href="../css/createjob.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Create Job Listing</h1>
+        
+        <!-- Job Basic Info Section -->
+        <div class="form-section active" id="basic-info">
+            <h2>Basic Job Information</h2>
+            <label>Job Title</label>
+            <input type="text" id="jobTitle" placeholder="Enter job title">
+            
+            <h2>Job Type</h2>
+            <div class="job-type-container">
+                <div class="job-type" onclick="selectJobType('Full-time')">
+                    <img src="../images/15.png" alt="Full-time">
+                    <span>Full-time</span>
+                </div>
+                <div class="job-type" onclick="selectJobType('Part-time')">
+                    <img src="../images/18.png" alt="Part-time">
+                    <span>Part-time</span>
+                </div>
+                <div class="job-type" onclick="selectJobType('Freelance')">
+                    <img src="../images/20.png" alt="Freelance">
+                    <span>Freelance</span>
+                </div>
+                <div class="job-type" onclick="selectJobType('Internship')">
+                    <img src="../images/19.png" alt="Internship">
+                    <span>Internship</span>
+                </div>
+            </div>
+            <input type="hidden" id="jobType">
+            
+            <h2>Work Arrangement</h2>
+            <div class="arrangementscontainer">
+                <div class="arrangements" onclick="selectWorkArrangement('On Site')">
+                    <img src="../images/onsite.png" alt="On Site">
+                    <span>On Site</span>
+                </div>
+                <div class="arrangements" onclick="selectWorkArrangement('Remote')">
+                    <img src="../images/remote.png" alt="Remote">
+                    <span>Remote</span>
+                </div>
+                <div class="arrangements" onclick="selectWorkArrangement('Hybrid')">
+                    <img src="../images/hybrid.png" alt="Hybrid">
+                    <span>Hybrid</span>
+                </div>
+            </div>
+            <input type="hidden" id="workArrangement">
+
+            <h2>Application Deadline</h2>
+            <input type="date" id="applicationDeadline" min="">
+
+            <h2>Number of Open Positions</h2>
+            <input type="number" id="jobSlots" placeholder="Enter number of positions available" min="1">
+                        
+            <div class="buttons">
+                <button disabled>Previous</button>
+                <button onclick="nextSection('basic-info', 'job-details')">Next</button>
+            </div>
+        </div>
+        
+        <!-- Job Details Section -->
+        <div class="form-section" id="job-details">
+            <h2>Job Details</h2>
+            
+            <label>Job Industry or Department</label>
+            <select id="jobIndustry">
+                <option value="">Select Industry</option>
+                <option value="IT">Information Technology</option>
+                <option value="Healthcare">Healthcare</option>
+                <option value="Education">Education</option>
+                <option value="Finance">Finance</option>
+                <option value="Manufacturing">Manufacturing</option>
+                <option value="Retail">Retail</option>
+                <option value="Hospitality">Hospitality</option>
+                <option value="Other">Other</option>
+            </select>
+            
+            <label>Job Description</label>
+            <textarea id="jobDescription" placeholder="Describe the job responsibilities and requirements"></textarea>
+            
+            <label>Salary Range</label>
+            <div class="checkbox-group">
+                <label><input type="radio" name="salaryRange" value="Entry-Level: ₱12,000 – ₱20,000"> Entry-Level: ₱12,000 – ₱20,000</label>
+                <label><input type="radio" name="salaryRange" value="Mid-Level: ₱20,000 – ₱40,000"> Mid-Level: ₱20,000 – ₱40,000</label>
+                <label><input type="radio" name="salaryRange" value="Senior-Level: ₱40,000 – ₱70,000"> Senior-Level: ₱40,000 – ₱70,000</label>
+                <label><input type="radio" name="salaryRange" value="Custom"> Custom: <input type="text" id="customSalary" style="width: 60%;" disabled></label>
+            </div>
+            
+            <label>Required Skills & Qualifications</label>
+            <div class="skills">
+                <div class="skill-box" onclick="showSkillInput('education')">
+                    <span>Education Level</span>
+                    <img src="../images/education.png" alt="Education">
+                </div>
+                <div class="skill-box" onclick="showSkillInput('softSkills')">
+                    <span>Soft Skills</span>
+                    <img src="../images/softskills.png" alt="Soft Skills">
+                </div>
+                <div class="skill-box" onclick="showSkillInput('experience')">
+                    <span>Work Experience Level</span>
+                    <img src="../images/wel.png" alt="Work Experience">
+                </div>
+                <div class="skill-box" onclick="showSkillInput('technical')">
+                    <span>Technical Skills</span>
+                    <img src="../images/technical.png" alt="Technical Skills">
+                </div>
+                <div class="skill-box" onclick="showSkillInput('certifications')">
+                    <span>Certification & Licenses</span>
+                    <img src="../images/cl.png" alt="Certification">
+                </div>
+            </div>
+            
+            <div id="skillInputContainer">
+                <input type="text" id="skillInput" placeholder="Enter skill details">
+                <button onclick="addSkill()">Add</button>
+            </div>
+            
+            <div id="skillsList"></div>
+            
+            <div class="buttons">
+                <button onclick="prevSection('job-details', 'basic-info')">Previous</button>
+                <button onclick="nextSection('job-details', 'how-to-apply')">Next</button>
+            </div>
+        </div>
+        
+        <!-- How to Apply Section -->
+        <div class="form-section" id="how-to-apply">
+            <h2>How to Apply</h2>
+            
+            <label>Application Instructions</label>
+            <textarea id="applicationInstructions" placeholder="Provide instructions for applicants"></textarea>
+            
+            <label>Submission Method</label>
+            <div class="checkbox-group">
+                <label><input type="radio" name="submissionMethod" value="Upload Documents"> Upload Documents</label>
+                <label><input type="radio" name="submissionMethod" value="Email Application"> Email Application</label>
+                <label><input type="radio" name="submissionMethod" value="Online Form Link"> Online Form Link</label>
+                <label><input type="radio" name="submissionMethod" value="In-Person Application"> In-Person Application</label>
+            </div>
+            
+            <label>Required Documents</label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" name="requiredDocs" value="Resume or Curriculum Vitae (CV)"> Resume or Curriculum Vitae (CV)</label>
+                <label><input type="checkbox" name="requiredDocs" value="Cover Letter"> Cover Letter</label>
+                <label><input type="checkbox" name="requiredDocs" value="Portfolio"> Portfolio</label>
+                <label><input type="checkbox" name="requiredDocs" value="Certifications/Licenses"> Certifications/Licenses</label>
+                <label><input type="checkbox" name="requiredDocs" value="Other"> Other: <input type="text" id="otherDocs" style="width: 60%;"></label>
+            </div>
+            
+            <div class="file-upload">
+                <label for="jobDocuments">Upload Job Documents (if any)</label>
+                <input type="file" id="jobDocuments" multiple>
+                <button onclick="document.getElementById('jobDocuments').click()">Select Files</button>
+                <div class="file-list" id="fileList"></div>
+            </div>
+            
+            <div class="buttons">
+                <button onclick="prevSection('how-to-apply', 'job-details')">Previous</button>
+                <button onclick="nextSection('how-to-apply', 'review')">Next</button>
+            </div>
+        </div>
+        
+        <!-- Review Section -->
+        <div class="form-section" id="review">
+            <h2>Review Your Job Listing</h2>
+            
+            <div id="reviewContent" style="background: white; color: black; padding: 20px; border-radius: 5px; margin-bottom: 20px;">
+                <!-- Review content will be populated by JavaScript -->
+            </div>
+            
+            <div class="buttons">
+                <button onclick="prevSection('review', 'how-to-apply')">Previous</button>
+                <button class="primary" onclick="submitJobListing()">Submit Job Listing</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Loading Indicator -->
+    <div class="loading-container" id="loading">
+        <div class="loading-spinner"></div>
+    </div>
+    
+    <!-- Firebase Module -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, doc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-storage.js";
+    
+        const firebaseConfig = {
+            apiKey: "AIzaSyCM1QSKbZH9Ih3RHv39nQipYoti8Yrji_M",
+            authDomain: "careerstep-bpsu1.firebaseapp.com",
+            projectId: "careerstep-bpsu1",
+            storageBucket: "careerstep-bpsu1.firebasestorage.app",
+            messagingSenderId: "17047315291",
+            appId: "1:17047315291:web:dc2c9312e3d5b0ced5307e",
+            measurementId: "G-WH6DT9HQW2"
+        };
+    
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+    
+        // Expose Firebase methods globally
+        window.auth = auth;
+        window.db = db;
+        window.storage = storage;
+        window.onAuthStateChanged = onAuthStateChanged;
+        window.addDoc = addDoc;
+        window.collection = collection;
+        window.doc = doc;
+        window.setDoc = setDoc;
+        window.updateDoc = updateDoc;
+        window.ref = ref;
+        window.uploadBytes = uploadBytes;
+        window.getDownloadURL = getDownloadURL;
+    </script>
+    
+    <script>
+        // Global variables
+        let currentSection = 'basic-info';
+        let jobData = {};
+        let uploadedFiles = [];
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('applicationDeadline').min = new Date().toISOString().split('T')[0];
+        });
+
+        // Navigation functions
+        function nextSection(current, next) {
+            if (validateSection(current)) {
+                document.getElementById(current).classList.remove('active');
+                document.getElementById(next).classList.add('active');
+                currentSection = next;
+                
+                // If moving to review section, populate the review
+                if (next === 'review') {
+                    prepareReview();
+                }
+            }
+        }
+        
+        function prevSection(current, prev) {
+            document.getElementById(current).classList.remove('active');
+            document.getElementById(prev).classList.add('active');
+            currentSection = prev;
+        }
+        
+        // Section validation
+        function validateSection(sectionId) {
+            switch(sectionId) {
+                case 'basic-info':
+                    const jobTitle = document.getElementById('jobTitle').value;
+                    const jobType = document.getElementById('jobType').value;
+                    const workArrangement = document.getElementById('workArrangement').value;
+                    const deadline = document.getElementById('applicationDeadline').value;
+                    const jobSlots = document.getElementById('jobSlots').value;
+                    
+                    if (!jobTitle || !jobType || !workArrangement || !deadline || !jobSlots) {
+                        alert('Please fill all required fields in Basic Job Information');
+                        return false;
+                    }
+                    return true;
+                    
+                case 'job-details':
+                    const jobIndustry = document.getElementById('jobIndustry').value;
+                    const jobDescription = document.getElementById('jobDescription').value;
+                    const salaryRange = document.querySelector('input[name="salaryRange"]:checked');
+                    
+                    if (!jobIndustry || !jobDescription || !salaryRange) {
+                        alert('Please fill all required fields in Job Details');
+                        return false;
+                    }
+                    return true;
+                    
+                default:
+                    return true;
+            }
+        }
+        
+        // Job type selection
+        function selectJobType(type) {
+            document.getElementById('jobType').value = type;
+            // Update UI to show selection
+            document.querySelectorAll('.job-type').forEach(el => {
+                el.style.backgroundColor = el.querySelector('span').textContent === type ? '#2f4f72' : 'white';
+                el.style.color = el.querySelector('span').textContent === type ? 'white' : '#3b5d7c';
+            });
+        }
+        
+        // Work arrangement selection
+        function selectWorkArrangement(arrangement) {
+            document.getElementById('workArrangement').value = arrangement;
+            // Update UI to show selection
+            document.querySelectorAll('.arrangements').forEach(el => {
+                el.style.backgroundColor = el.querySelector('span').textContent === arrangement ? '#2f4f72' : 'white';
+                el.style.color = el.querySelector('span').textContent === arrangement ? 'white' : '#3b5d7c';
+            });
+        }
+        
+        // Salary range handling
+        document.querySelectorAll('input[name="salaryRange"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                document.getElementById('customSalary').disabled = this.value !== 'Custom';
+            });
+        });
+        
+        // Skills handling
+        let currentSkillType = '';
+        
+        function showSkillInput(type) {
+            currentSkillType = type;
+            document.getElementById('skillInputContainer').style.display = 'block';
+            document.getElementById('skillInput').placeholder = `Enter ${type.replace(/([A-Z])/g, ' $1')}`;
+            document.getElementById('skillInput').focus();
+        }
+        
+        function addSkill() {
+            const skillValue = document.getElementById('skillInput').value;
+            if (skillValue) {
+                if (!jobData.skills) jobData.skills = {};
+                if (!jobData.skills[currentSkillType]) jobData.skills[currentSkillType] = [];
+                
+                jobData.skills[currentSkillType].push(skillValue);
+                updateSkillsList();
+                document.getElementById('skillInput').value = '';
+            }
+        }
+        
+        function updateSkillsList() {
+            let html = '<h3>Added Skills:</h3>';
+            for (const [type, skills] of Object.entries(jobData.skills || {})) {
+                html += `<h4>${type.replace(/([A-Z])/g, ' $1')}:</h4><ul>`;
+                skills.forEach(skill => {
+                    html += `<li>${skill} <button onclick="removeSkill('${type}', '${skill}')">×</button></li>`;
+                });
+                html += '</ul>';
+            }
+            document.getElementById('skillsList').innerHTML = html;
+        }
+        
+        function removeSkill(type, skill) {
+            jobData.skills[type] = jobData.skills[type].filter(s => s !== skill);
+            if (jobData.skills[type].length === 0) {
+                delete jobData.skills[type];
+            }
+            updateSkillsList();
+        }
+        
+        // File upload handling
+        document.getElementById('jobDocuments').addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            uploadedFiles = [...uploadedFiles, ...files];
+            updateFileList();
+        });
+        
+        function updateFileList() {
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = '';
+            
+            uploadedFiles.forEach((file, index) => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    ${file.name} (${(file.size / 1024).toFixed(2)} KB)
+                    <button onclick="removeFile(${index})">Remove</button>
+                `;
+                fileList.appendChild(fileItem);
+            });
+        }
+        
+        function removeFile(index) {
+            uploadedFiles.splice(index, 1);
+            updateFileList();
+        }
+        
+        // Prepare review content
+        function prepareReview() {
+            // Collect all data from forms
+            jobData = {
+                basicInfo: {
+                    jobTitle: document.getElementById('jobTitle').value,
+                    jobType: document.getElementById('jobType').value,
+                    workArrangement: document.getElementById('workArrangement').value,
+                    deadline: document.getElementById('applicationDeadline').value,
+                    jobSlots: document.getElementById('jobSlots').value
+                },
+                jobDetails: {
+                    jobIndustry: document.getElementById('jobIndustry').value,
+                    jobDescription: document.getElementById('jobDescription').value,
+                    salaryRange: document.querySelector('input[name="salaryRange"]:checked').value,
+                    skills: jobData.skills || {}
+                },
+                howToApply: {
+                    applicationInstructions: document.getElementById('applicationInstructions').value,
+                    submissionMethod: document.querySelector('input[name="submissionMethod"]:checked').value,
+                    requiredDocuments: Array.from(document.querySelectorAll('input[name="requiredDocs"]:checked')).map(cb => cb.value),
+                    otherDocuments: document.getElementById('otherDocs').value
+                },
+                files: uploadedFiles.map(file => file.name)
+            };
+            
+            // Display the review
+            let reviewHTML = `
+                <h3>Basic Information</h3>
+                <p><strong>Job Title:</strong> ${jobData.basicInfo.jobTitle}</p>
+                <p><strong>Job Type:</strong> ${jobData.basicInfo.jobType}</p>
+                <p><strong>Work Arrangement:</strong> ${jobData.basicInfo.workArrangement}</p>
+                <p><strong>Application Deadline:</strong> ${new Date(jobData.basicInfo.deadline).toLocaleDateString()}</p>
+                <p><strong>Number of Positions:</strong> ${jobData.basicInfo.jobSlots}</p>
+                
+                <h3>Job Details</h3>
+                <p><strong>Industry:</strong> ${jobData.jobDetails.jobIndustry}</p>
+                <p><strong>Description:</strong> ${jobData.jobDetails.jobDescription}</p>
+                <p><strong>Salary Range:</strong> ${jobData.jobDetails.salaryRange}</p>
+                
+                <h3>Skills & Qualifications</h3>
+            `;
+            
+            for (const [type, skills] of Object.entries(jobData.jobDetails.skills)) {
+                reviewHTML += `<p><strong>${type.replace(/([A-Z])/g, ' $1')}:</strong> ${skills.join(', ')}</p>`;
+            }
+            
+            reviewHTML += `
+                <h3>How to Apply</h3>
+                <p><strong>Instructions:</strong> ${jobData.howToApply.applicationInstructions}</p>
+                <p><strong>Submission Method:</strong> ${jobData.howToApply.submissionMethod}</p>
+                <p><strong>Required Documents:</strong> ${jobData.howToApply.requiredDocuments.join(', ')}</p>
+                ${jobData.howToApply.otherDocuments ? `<p><strong>Other Documents:</strong> ${jobData.howToApply.otherDocuments}</p>` : ''}
+                
+                <h3>Attached Files</h3>
+                ${jobData.files.length > 0 ? `<ul>${jobData.files.map(file => `<li>${file}</li>`).join('')}</ul>` : '<p>No files attached</p>'}
+            `;
+            
+            document.getElementById('reviewContent').innerHTML = reviewHTML;
+        }
+        
+        // Submit job listing
+        async function submitJobListing() {
+            document.getElementById('loading').style.display = 'flex';
+            
+            try {
+                // Get current user
+                const user = auth.currentUser;
+                // if (!user) {
+                //     throw new Error('User not authenticated');
+                // }
+
+                // Prepare job data without files first
+                const jobListingData = {
+                    employerId: user.uid,
+                    createdAt: new Date(),
+                    deadline: new Date(jobData.basicInfo.deadline),
+                    status: 'active',
+                    jobTitle: jobData.basicInfo.jobTitle,
+                    jobType: jobData.basicInfo.jobType,
+                    jobSlots: parseInt(jobData.basicInfo.jobSlots),
+                    workArrangement: jobData.basicInfo.workArrangement,
+                    jobIndustry: jobData.jobDetails.jobIndustry,
+                    jobDescription: jobData.jobDetails.jobDescription,
+                    salaryRange: jobData.jobDetails.salaryRange,
+                    skills: jobData.jobDetails.skills,
+                    howToApply: {
+                        applicationInstructions: jobData.howToApply.applicationInstructions,
+                        submissionMethod: jobData.howToApply.submissionMethod,
+                        requiredDocuments: jobData.howToApply.requiredDocuments,
+                        otherDocuments: jobData.howToApply.otherDocuments,
+                        fileUrls: [] // Initialize empty array - will be populated below
+                    }
+                };
+
+                // Create the job listing document first to get the ID
+                const docRef = await addDoc(collection(db, 'jobListings'), jobListingData);
+                const jobId = docRef.id;
+                console.log("Created job with ID:", jobId);
+
+                // Upload files to storage if any
+                const fileUrls = [];
+                if (uploadedFiles.length > 0) {
+                    console.log("Uploading", uploadedFiles.length, "files...");
+                    
+                    for (const file of uploadedFiles) {
+                        try {
+                            // Create storage reference
+                            const storagePath = `jobDocuments/${jobId}/${file.name}`;
+                            const storageRef = ref(storage, storagePath);
+                            
+                            // Upload file
+                            console.log("Uploading file:", file.name);
+                            const snapshot = await uploadBytes(storageRef, file);
+                            
+                            // Get download URL
+                            const url = await getDownloadURL(snapshot.ref);
+                            console.log("File uploaded. URL:", url);
+                            
+                            fileUrls.push({
+                                name: file.name,
+                                url: url,
+                                type: file.type || 'application/octet-stream',
+                                size: file.size
+                            });
+                        } catch (fileError) {
+                            console.error("Error uploading file:", file.name, fileError);
+                            // Continue with other files even if one fails
+                        }
+                    }
+                    
+                    // Update the job listing with file URLs
+                    if (fileUrls.length > 0) {
+                        console.log("Updating job with file URLs:", fileUrls);
+                        await updateDoc(doc(db, 'jobListings', jobId), {
+                            'howToApply.fileUrls': fileUrls
+                        });
+                    }
+                }
+
+                // Save reference in employer's subcollection
+                await setDoc(doc(db, 'employers', user.uid, 'jobListings', jobId), {
+                    jobId: jobId,
+                    title: jobData.basicInfo.jobTitle,
+                    createdAt: new Date(),
+                    status: 'active',
+                    fileCount: fileUrls.length
+                });
+
+                console.log("Job listing created successfully!");
+                alert('Job listing created successfully!');
+                window.location.href = 'homep.html';
+                
+            } catch (error) {
+                console.error('Error submitting job listing:', error);
+                alert('Error creating job listing: ' + error.message);
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        // Initialize the page
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     // Check if user is logged in
+        //     onAuthStateChanged(auth, (user) => {
+        //         if (!user) {
+        //             window.location.href = 'Loginpage.html';
+        //         } else {
+        //             // Fetch disability types when the page loads
+        //             fetchDisabilityTypes();
+        //         }
+        //     });
+        // });
+    </script>
+</body>
+</html>
